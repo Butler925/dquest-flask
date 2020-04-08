@@ -2,8 +2,9 @@
 {% block index %}
 <div class="ui container" id='dash_board'>
     <h3>
-        <a href="http://www.clinicaltrials.gov" target="_blank">ClinicalTrials.gov</a> currently lists <span
-            id="ctgov_number">{{nnct}}</span> studies
+        <a href="http://www.clinicaltrials.gov" target="_blank">ClinicalTrials.gov</a> currently lists
+        <span id="ctgov_number">{{nnct}}</span> studies for COVID-19, and {{nnct_us}} in United States
+        <p>DQuest currently included {{nnct_local_kb}} trials.</p>
     </h3>
 </div>
 <div class="ui hidden divider"></div>
@@ -11,29 +12,31 @@
 <div class="ui hidden divider"></div>
 <div class="ui hidden divider"></div>
 <div class="ui stackable very relaxed center aligned grid container">
-    <h2 class="ui header">DQueST: Final Eligible Clinical Trials As Easy As Possible
+    <h2 class="ui header">DQueST: Find Clinical Trials for COVID-19 in the United States
     </h2>
     <div id='search_form_container' class='ui container'>
         <form class="ui form" id="search_form" name="">
-            <div class="field">
+            <div hidden class="field">
                 <label>Conditions or Disease (for example: breast cancer)</label>
                 <div class="ui search">
-                    <input class="prompt" name="term" id="first_focus" placeholder="Breast Cancer">
+                    <input class="prompt" name="term" id="first_focus" placeholder="Breast Cancer" value="COVID-19">
                 </div>
             </div>
+
             <div class="field">
-                <label>Location</label>
+                <label>What is your Current Location?</label>
                 <input class="input_field field_text" type="text" id="location_terms" value=""
                     placeholder="Los Angeles" />
             </div>
 
             <div class="ui secondary submit button" id="search_button">Search</div>
-            <div class="ui button" id="advsearch_button">Advanced Search<i class="right chevron icon"></i></div>
+
             <div class="ui error message"></div>
             <div class="ui mini message">
                 <ul class="list">
-                    <li>Pressing the SEARCH button will find only INTERVENTIONAL and ACTIVELY RECRUITING</li>
-                    <li>For additional options, please press the ADVANCED SEARCH button</li>
+                    <li>This tool is designed to help patients, clinicians, or healthy volunteers find nearby clinical trials targeting the novel coronavirus (COVID-19) and actively looking for participants</li>
+                    <li>Pressing the SEARCH button will highlight all trials near you, and then you will be asked a series of brief questions to help identify the most appropriate trials for you</li>
+                    <li>The current search is limited to only trials in the United States, but future versions will include all studies hosted on ClinicalTrials.gov</li>
                 </ul>
             </div>
         </form>
@@ -45,12 +48,20 @@
 <div id='adv_search_container' class='ui container' style="display:none">
     {% include "advsearch.html" %}
 </div>
+
 <div class="ui hidden divider"></div>
 <div id="question_container" class="ui container" style="display:none">
     {% include "qform.html" %}
 </div>
+
+<div class="ui hidden divider"></div>
+<div id='multiquestions_container' class='ui container' style="display:none">
+    {% include "multiquestions.html" %}
+</div>
+
 <div class="ui hidden divider"></div>
 <div id='results_container' class="ui container" style="display:none">
     {% include "results.html" %}
 </div>
+
 {% endblock %}

@@ -1,0 +1,114 @@
+<form class="ui form" id="pre_questions_search" name="Pre Question Search" style="margin-top:0px;">
+<div class="ui segment ten wide column">
+    <h2 class="ui top attached label">Question Panel</h2>
+            <div class="field" id="question_field">
+                <h3 class="ui header" >
+                    <label id="question_number">Please answer the following FIVE questions first! </label>
+                </h3>
+                <h3 class="ui header">
+                    <label id="domain_check">What is your/your patient's age?</label>
+                </h3>
+                <div class="ui fluid field" tabindex="0">
+                    <input class="" type="text" name="pre_age" id="pre_questions_age" placeholder="Please type in your age" >
+                </div>
+
+                <h3 class="ui header">
+                    <label id="domain_check">What is your/your patient's gender (Male, Female, Non-Binary, Other)?</label>
+                </h3>
+                <div class="ui fluid dropdown selection" tabindex="0">
+                    <select id="pre_questions_gender" name="pre_gender">
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="both">Non-Binary</option>
+                    <option value="trans">Other</option>
+                    </select>
+                    <i class="dropdown icon"></i>
+                    <div class="text">Any</div>
+                    <div class="menu" tabindex="-1">
+                        <div class="item" data-value="male">Male</div>
+                        <div class="item" data-value="female">Female</div>
+                        <div class="item" data-value="both">Non-Binary</div>
+                        <div class="item" data-value="trans">Other</div>
+                    </div>
+                </div>
+
+                <div class="ui divider hidden"></div>
+                <h3 class="ui header">
+                    <label id="domain_check">Have you/your patient been diagnosed with a COVID-19/coronavirus infection (Yes, No, Yes but now cleared)?</label>
+                </h3>
+                <div class="ui fluid dropdown selection" tabindex="0">
+                    <select id="pre_questions_domain" name="pre_domain">
+                    <option value="yes">Yes</option>
+                    <option selected value="no">No</option>
+                    <option value="cleared">Cleared</option>
+                    <option value="yes/no">Yes/No</option>
+                    </select>
+                    <i class="dropdown icon"></i>
+                    <div class="text">Any</div>
+                    <div class="menu" tabindex="-1">
+                        <div class="item" data-value="yes">Yes</div>
+                        <div class="item" data-value="no">No</div>
+                        <div class="item" data-value="cleared">Cleared</div>
+                        <div class="item" data-value="yes/no">Yes/No</div>
+                    </div>
+                </div>
+
+                <div class="ui divider hidden"></div>
+
+                <div class="ui container " id="pre_time_container" style="display: none;">
+                    <h3 class="ui header">
+                        <label>Could you provide your diagnosis time?</label></h3>
+                        <div class="field">
+                            <div class="ui calendar" id="user_picked_time" time_string="">
+                                <div class="ui input left icon"><div class="ui popup calendar bottom left transition hidden" style="top: 38px; left: 0px; bottom: auto; right: auto;"><table class="ui celled center aligned unstackable table seven column day"><thead><tr><th colspan="7"><span class="link">April 2020</span><span class="prev link"><i class="chevron left icon"></i></span><span class="next link"><i class="chevron right icon"></i></span></th></tr><tr><th>S</th><th>M</th><th>T</th><th>W</th><th>T</th><th>F</th><th>S</th></tr></thead><tbody><tr><td class="link adjacent disabled">29</td><td class="link adjacent disabled">30</td><td class="link adjacent disabled">31</td><td class="link">1</td><td class="link">2</td><td class="link focus">3</td><td class="link">4</td></tr><tr><td class="link">5</td><td class="link">6</td><td class="link today">7</td><td class="link">8</td><td class="link">9</td><td class="link">10</td><td class="link">11</td></tr><tr><td class="link">12</td><td class="link">13</td><td class="link">14</td><td class="link">15</td><td class="link">16</td><td class="link">17</td><td class="link">18</td></tr><tr><td class="link">19</td><td class="link">20</td><td class="link">21</td><td class="link">22</td><td class="link">23</td><td class="link">24</td><td class="link">25</td></tr><tr><td class="link">26</td><td class="link">27</td><td class="link">28</td><td class="link">29</td><td class="link">30</td><td class="link adjacent disabled">1</td><td class="link adjacent disabled">2</td></tr><tr><td class="link adjacent disabled">3</td><td class="link adjacent disabled">4</td><td class="link adjacent disabled">5</td><td class="link adjacent disabled">6</td><td class="link adjacent disabled">7</td><td class="link adjacent disabled">8</td><td class="link adjacent disabled">9</td></tr><tr><td colspan="7" class="today link">Today</td></tr></tbody></table></div>
+                                    <i class="calendar icon"></i>
+                                    <input type="text" placeholder="Your COVID-19 Diagnosis time" class="">
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+                <!-- <div class="ui divider hidden"></div> -->
+                <h3 class="ui header">
+                    <label id="domain_check">Are you/your patient currently hospitalized or in an Intensive Care Unit (ICU)? </label>
+                </h3>
+                <div class="ui fluid dropdown selection" tabindex="0">
+                    <select id="pre_questions_patient_stat" name="pre_patient_stat">
+                    <option value="any">Any</option>
+                    <option value="hospitalized">Hospitalized</option>
+                    <option value="icu">Intensive Care Unit</option>
+                    <option value="other">Other</option>
+                    </select>
+                    <i class="dropdown icon"></i>
+                    <div class="text">Any</div>
+                    <div class="menu" tabindex="-1">
+                        <!-- <div class="item" data-value="any">Any</div> -->
+                        <div class="item" data-value="hospitalized">Hospitalized</div>
+                        <div class="item" data-value="icu">Intensive Care Unit</div>
+                        <div class="item" data-value="other">Other</div>
+                    </div>
+                </div>
+
+                <div class="ui divider hidden"></div>
+                <h3 class="ui header">
+                    <label id="domain_check">Are you/your patient currently pregnant (Yes, No, I don't know)?</label>
+                </h3>
+                <div class="ui fluid dropdown selection" tabindex="0">
+                    <select id="pre_questions_patient_preg" name="pre_patient_preg">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                    <option value="idn">I don't Know</option>
+                    </select>
+                    <i class="dropdown icon"></i>
+                    <div class="text">Any</div>
+                    <div class="menu" tabindex="-1">
+                        <div class="item" data-value="no">No</div>
+                        <div class="item" data-value="yes">Yes</div>
+                        <div class="item" data-value="idn">I don't Know</div>
+                    </div>
+                </div>
+
+            </div>
+
+    </div>
+</form>

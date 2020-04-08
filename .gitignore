@@ -6,3 +6,4 @@ env/
 .idea/
 local/
 .vscode/
+/venv/

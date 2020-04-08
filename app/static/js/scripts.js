@@ -1,3 +1,37 @@
+function pre_questions_search(){
+    var age = $('#pre_questions_age').val();
+    var gender = $('#pre_questions_gender').val();
+    var domain = $('#pre_questions_domain').val();
+    var stat = $('#pre_questions_patient_stat').val();
+    var preg = $('#pre_questions_patient_preg').val();
+
+    if ($("#user_picked_time").attr('time_string') !== '') {
+        var user_picked_time = $("#user_picked_time").attr('time_string');
+        // a['rangestart'] = -rangestart.diff(today_time, 'days');
+    }
+    console.log(age + ' ' + gender + ' ' + domain + ' ' + user_picked_time + ' ' + stat + ' ' + preg);
+    // var dict = [];
+    // dict['age'] = age;
+    // dict['gender'] = gender;
+    // dict['domain'] = domain;
+    // dict['user_pick_time'] = user_picked_time;
+    // dict['stat'] = stat;
+    // dict['preg'] = preg;
+    $.getJSON($SCRIPT_ROOT + '/_pre_questions',
+            {age: age,
+                gender : gender,
+                domain : domain,
+                user_pick_time: user_picked_time,
+                stat:stat,
+                preg:preg,
+            },
+            function (data) {
+                console.log(data);
+            });
+}
+
+
+
 function search(tsearch) {
     if (tsearch == 'advanced') {
         var form_args = $(adv_search).serializeArray();
@@ -34,6 +68,7 @@ function search(tsearch) {
                         $('#question_container').show();
                         $('#results_container').show();
                         $('#search_results_container').hide();
+                        $('#multiquestions_container').hide();
                         $('#filter_results_container').show();
                         $('#filter_results').hide();
                         $("#qfilt").hide();
@@ -88,6 +123,7 @@ function search(tsearch) {
                     $('#search_form_container').hide();
                     $('#question_container').show();
                     $('#results_container').show();
+                    $('#multiquestions_container').hide();
                     $('#search_results_container').hide();
                     $('#filter_results_container').show();
                     $("#qfilt").hide();
@@ -137,6 +173,7 @@ function result_content(nct_details_for_this_page) {
 
 // start first question
 function start_question(tsearch) {
+    pre_questions_search();
     if (tsearch == 'advanced') {
         var form_args = $(adv_search).serializeArray();
         qlabel = $('#qlabel').text();
@@ -574,6 +611,28 @@ function semantiUIInit() {
             }
         }
     });
+    $('#user_picked_time').calendar({
+        type: 'date',
+        today: true,
+        onChange: function (date) {
+            if (date !== undefined) {
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var day = date.getDate();
+                if (month < 10) {
+                    month = '0' + month;
+                }
+                if (day < 10) {
+                    day = '0' + day;
+                }
+                time = month + '/' + day + '/' + year;
+                $(this).attr('time_string', time);
+                // everything combined
+                console.log(time);
+            }
+
+        }
+    });
     $('.ui.calendar').calendar('clear');
     $('#measurement_value').val('');
     $('#value_input_container').hide();
@@ -662,6 +721,7 @@ $(document).ready(function () {
                 $('#filter_results_container').hide();
                 $('#question_container').hide();
                 $('#results_container').show();
+                $('#multiquestions_container').show();
                 $('#search_form_container').hide();
                 $('#dash_board').hide();
                 $('#search_results_container').show();
@@ -763,6 +823,17 @@ $(document).ready(function () {
         function () {
             window.location.href = '/';
         });
+
+    $('#pre_questions_domain').on('change', function() {
+      if ( this.value == 'yes')
+      {
+        $("#pre_time_container").show();
+      }
+      else
+      {
+        $("#pre_time_container").hide();
+      }
+    });
 
     // function () {
     //     $('#question_tags').empty();

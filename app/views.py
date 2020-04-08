@@ -12,11 +12,26 @@ log = logger ('dquest-view')
 @app.route('/')
 def index ():
     # get trial number
-    nnct = ctgov.get_nct_number ('http://clinicaltrials.gov/search?term=&displayxml=True&count=0')
+    # nnct = ctgov.get_nct_number ('http://clinicaltrials.gov/search?term=&displayxml=True&count=0')
+    nnct = ctgov.get_nct_number('http://clinicaltrials.gov/search?term=covid-19&displayxml=True&count=0')
+    nnct_us = ctgov.get_nct_number('http://clinicaltrials.gov/search?term=covid-19&cntry=US&displayxml=True&count=0')
+    nnct_local_kb = len(qst.find_annotated_nct_id_list())
     # search form    
     # form = SearchForm()
-    return render_template('index.html', nnct = of.format_nct_number(nnct))
+    return render_template('index.html', nnct=of.format_nct_number(nnct), nnct_us=of.format_nct_number(nnct_us), nnct_local_kb=nnct_local_kb)
 
+# filter by the pre questions
+@app.route('/_pre_questions')
+def pre_questions_search ():
+    age = request.args.get('age')
+    gender = request.args.get('gender')
+    domain = request.args.get('domain')
+    user_picked_time = request.args.get('user_picked_time')
+    stat = request.args.get('stat')
+    preg = request.args.get('preg')
+    pre_quest_answers = [age, gender, domain, user_picked_time, stat, preg]
+    qst.filter_nct_ids_by_pre_questions(pre_quest_answers)
+    return jsonify (pre_quest_answers)
 
 # search for clinical trials
 @app.route('/_ctgov_search')
