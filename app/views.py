@@ -16,7 +16,7 @@ def index ():
     nnct = ctgov.get_nct_number('http://clinicaltrials.gov/search?term=covid-19&displayxml=True&count=0')
     nnct_us = ctgov.get_nct_number('http://clinicaltrials.gov/search?term=covid-19&cntry=US&displayxml=True&count=0')
     nnct_local_kb = len(qst.find_annotated_nct_id_list())
-    # search form    
+    # search form
     # form = SearchForm()
     return render_template('index.html', nnct=of.format_nct_number(nnct), nnct_us=of.format_nct_number(nnct_us), nnct_local_kb=nnct_local_kb)
 
@@ -27,11 +27,12 @@ def pre_questions_search ():
     gender = request.args.get('gender')
     domain = request.args.get('domain')
     user_picked_time = request.args.get('user_picked_time')
+    exposure = request.args.get('exposure')
     stat = request.args.get('stat')
     preg = request.args.get('preg')
-    pre_quest_answers = [age, gender, domain, user_picked_time, stat, preg]
-    qst.filter_nct_ids_by_pre_questions(pre_quest_answers)
-    return jsonify (pre_quest_answers)
+    pre_quest_answers = [age, gender, domain, user_picked_time, exposure, stat, preg]
+    result_ids = qst.filter_nct_ids_by_pre_questions(pre_quest_answers)
+    return jsonify (result_ids)
 
 # search for clinical trials
 @app.route('/_ctgov_search')
@@ -76,8 +77,8 @@ def start_question():
     return jsonify (question_answer_list = question_answer_list, working_nct_id_list = working_nct_id_list)
 
 # start question and init working_nct_id_list and question_answer_list.
-@app.route('/_pts_start_question')
-def start_question_detail():
+@app.route('/_hao_start_question')
+def get_to_pre_questions():
     # get parameters
     cond = request.args.get('cond')
     locn = request.args.get('locn')
@@ -89,12 +90,39 @@ def start_question_detail():
     # get trials and tags
     rnct = ctgov.get_initial_nct_patient(cond,locn)
     working_nct_id_list = qst.init_working_nct_id_list(rnct)
+    return jsonify (working_nct_id_list = working_nct_id_list)
+
+
+# start question and init working_nct_id_list and question_answer_list.
+@app.route('/_pts_start_question')
+def start_question_detail():
+    # get parameters
+    cond = request.args.get('cond')
+    locn = request.args.get('locn')
+    age = request.args.get('age')
+    gender = request.args.get('gender')
+    domain = request.args.get('domain')
+    user_picked_time = request.args.get('user_picked_time')
+    exposure = request.args.get('exposure')
+    stat = request.args.get('stat')
+    preg = request.args.get('preg')
+    pre_quest_answers = [age, gender, domain, user_picked_time, exposure, stat, preg]
+
+    # save the query in session
+    session.clear()
+    session['query'] = cond
+    session.modified = True
+    # get trials and tags
+    rnct = ctgov.get_initial_nct_patient(cond,locn)
+    working_nct_id_list = qst.init_working_nct_id_list(rnct, pre_quest_answers)
     question_answer_list = []
     if len(working_nct_id_list) > 0:
         question_answer_list = qst.find_new_question(question_answer_list,working_nct_id_list)
         log.info ('%s -- first question' % (request.remote_addr))
 
     return jsonify (question_answer_list = question_answer_list, working_nct_id_list = working_nct_id_list)
+
+
 # start question by adv seasrch and init working_nct_id_list and question_answer_list.
 @app.route('/_advs_start_question')
 def advs_start_question():
@@ -143,4 +171,3 @@ def clean ():
     session.modified = True
     log.info ('%s -- tag cloud closed' % request.remote_addr)
     return jsonify (n=0, q=q)
-

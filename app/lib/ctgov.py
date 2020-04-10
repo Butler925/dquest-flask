@@ -38,7 +38,7 @@ def get_initial_nct_patient (cond,locn):
 def get_initial_nct_from_url (url):
     # num. of studies available
     n = get_nct_number('%s&count=0' % url)
-    print(n)
+    print('num. of studies available ', n)
     if n == 0:
         return []
     # get the list of clinical studies
@@ -52,6 +52,7 @@ def get_initial_nct_from_url (url):
             continue
         rnct.append ('%s;%d' % (ids.text,i))
         i += 1
+    print(rnct)
     return rnct
 
 

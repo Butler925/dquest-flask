@@ -2,6 +2,7 @@ function pre_questions_search(){
     var age = $('#pre_questions_age').val();
     var gender = $('#pre_questions_gender').val();
     var domain = $('#pre_questions_domain').val();
+    var exposure = $('#pre_questions_exposure').val();
     var stat = $('#pre_questions_patient_stat').val();
     var preg = $('#pre_questions_patient_preg').val();
 
@@ -9,25 +10,23 @@ function pre_questions_search(){
         var user_picked_time = $("#user_picked_time").attr('time_string');
         // a['rangestart'] = -rangestart.diff(today_time, 'days');
     }
-    console.log(age + ' ' + gender + ' ' + domain + ' ' + user_picked_time + ' ' + stat + ' ' + preg);
-    // var dict = [];
-    // dict['age'] = age;
-    // dict['gender'] = gender;
-    // dict['domain'] = domain;
-    // dict['user_pick_time'] = user_picked_time;
-    // dict['stat'] = stat;
-    // dict['preg'] = preg;
+    console.log(age + ' ' + gender + ' ' + domain + ' ' + user_picked_time + ' '+ exposure +' ' + stat + ' ' + preg);
+
+    var result = [];
     $.getJSON($SCRIPT_ROOT + '/_pre_questions',
             {age: age,
                 gender : gender,
                 domain : domain,
-                user_pick_time: user_picked_time,
+                user_picked_time: user_picked_time,
+                exposure: exposure,
                 stat:stat,
                 preg:preg,
             },
             function (data) {
+                result = data;
                 console.log(data);
             });
+    return result;
 }
 
 
@@ -105,31 +104,34 @@ function search(tsearch) {
         if (recrs == 'All') {
             recrs = ''
         }
-        $.getJSON($SCRIPT_ROOT + '/_pts_start_question', {
+        $.getJSON($SCRIPT_ROOT + '/_hao_start_question', {
             cond: cond,
             locn: locn
         }, function (data) {
             search_n = data.working_nct_id_list.length;
             tag_name = $('#first_focus').val();
             $('#search_n').html(search_n);
+            $('#search_n_1').html(search_n);
             $('#tag_name').html(tag_name);
+            $('#tag_name_1').html(tag_name);
             nres = parseInt(search_n);
             if (nres >= 1 && nres <= 25000) {
                 $("#qfilt").show();
                 $("#qfilt_warning").hide();
                 $('#qfilt').unbind('click');
                 $('#qfilt').bind('click', function () {
-                    start_question(tsearch);
-                    $('#search_form_container').hide();
-                    $('#question_container').show();
-                    $('#results_container').show();
-                    $('#multiquestions_container').hide();
-                    $('#search_results_container').hide();
-                    $('#filter_results_container').show();
-                    $("#qfilt").hide();
+                    filter_n = start_question(tsearch);
+                    // $('#search_form_container').hide();
+                    // $('#question_container').show();
+                    // $('#results_container').show();
+                    // $('#multiquestions_container').hide();
+                    // $('#search_results_container').hide();
+                    // $('#filter_results_container').show();
+                    // $("#qfilt").hide();
+                    // alert('Based on your location and the information you provided, you are not currently eligible for any trials in your area. Please feel free to return to the homepage using the \'Home\' button above to adjust any information that you entered or to stay up-to-date as new trials are published!');
 
                 });
-                find_search_results(data.working_nct_id_list, 1);
+                // find_search_results(data.working_nct_id_list, 1);
 
             } else {
                 if (nres > 25000) {
@@ -173,7 +175,7 @@ function result_content(nct_details_for_this_page) {
 
 // start first question
 function start_question(tsearch) {
-    pre_questions_search();
+    result =0;
     if (tsearch == 'advanced') {
         var form_args = $(adv_search).serializeArray();
         qlabel = $('#qlabel').text();
@@ -216,20 +218,54 @@ function start_question(tsearch) {
         var cond = $('#first_focus').val();
         var recrs = $('#recruit_status').val();
         var locn = $('#location_terms').val();
+        var age = $('#pre_questions_age').val();
+        var gender = $('#pre_questions_gender').val();
+        var domain = $('#pre_questions_domain').val();
+        var exposure = $('#pre_questions_exposure').val();
+        var stat = $('#pre_questions_patient_stat').val();
+        var preg = $('#pre_questions_patient_preg').val();
+        if ($("#user_picked_time").attr('time_string') !== '') {
+            var user_picked_time = $("#user_picked_time").attr('time_string');
+        }
+
         if (recrs == 'All') {
             recrs = ''
         }
         $.getJSON($SCRIPT_ROOT + '/_pts_start_question', {
             cond: cond,
-            locn: locn
+            locn: locn,
+            age: age,
+            gender : gender,
+            domain : domain,
+            user_picked_time: user_picked_time,
+            exposure: exposure,
+            stat:stat,
+            preg:preg,
         }, function (data) {
-            search_n = data.working_nct_id_list.length;
-            $('#filter_n').html(search_n);
-            nres = parseInt(search_n);
-            find_results(data.working_nct_id_list, 1);
-            q_visualization(data.question_answer_list, data.working_nct_id_list);
+            result = data.working_nct_id_list.length;
+            if (result !=0){
+                $('#search_form_container').hide();
+                $('#question_container').show();
+                $('#results_container').show();
+                $('#multiquestions_container').hide();
+                $('#search_results_container').hide();
+                $('#filter_results_container').show();
+                $("#qfilt").hide();
+
+                console.log('search_n is', result);
+                $('#filter_n').html(result);
+                nres = parseInt(result);
+                find_results(data.working_nct_id_list, 1);
+                q_visualization(data.question_answer_list, data.working_nct_id_list);
+            }
+            else{
+                alert('Based on your location and the information you provided, you are not currently eligible for any trials in your area. Please feel free to return to the homepage using the \'Home\' button above to adjust any information that you entered or to stay up-to-date as new trials are published!');
+
+            }
+
         });
     }
+    return result;
 }
 
 // visualize question_form
@@ -555,16 +591,16 @@ function show_qfilter_results(working_nct_id_list, npag, nct_details_for_this_pa
         $('#fnext').unbind('click')
     }
 
-
-
     $("#filter_results").children('.list').html(sout);
 }
 
 function semantiUIInit() {
     $('#rangeend').attr('readonly', false);
     $('#rangestart').attr('readonly', false);
+    $('#user_picked_time').attr('readonly', false);
     $('#rangeend').attr('time_string', '');
     $('#rangestart').attr('time_string', '');
+    $('#user_picked_time').attr('time_string', '');
     $('.ui.dropdown').dropdown('restore defaults');
     $('#rangestart').calendar({
         type: 'date',
@@ -720,6 +756,7 @@ $(document).ready(function () {
                 search("regular");
                 $('#filter_results_container').hide();
                 $('#question_container').hide();
+                $('#hm_blurb_container').hide();
                 $('#results_container').show();
                 $('#multiquestions_container').show();
                 $('#search_form_container').hide();
